@@ -29,4 +29,4 @@ scipy
 3. **config.json**: The configuration file for the dataset.
 
 ## Tutorial
-We provide users with comprehensive usage instructions in the `data` folder.Some demo data have been deposited in the Figshare database (https://figshare.com/articles/dataset/DeepNanoHi-C/28551230)
+We provide users with comprehensive usage instructions in the `data` folder. Some demo data have been deposited in the Figshare database (https://figshare.com/articles/dataset/DeepNanoHi-C/28551230)
