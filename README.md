@@ -8,41 +8,40 @@ DeepNanoHi-C tackles these challenges through a **multi-step autoencoder archite
 
 This tool enables comprehensive and scalable analysis of single-cell chromatin conformation, providing new avenues for understanding genome organization at the single-cell level and across species.
 
-
+![Model Overview](overview.jpg)
 ##  Installation
 
 To install and set up **DeepNanoHi-C**, please follow the steps below:
 
-### 1. Clone the Repository 
+1. **Clone the Repository**
 
 ```bash
 git clone https://github.com/your-username/DeepNanoHi-C.git
 cd DeepNanoHi-C
 ```
 
-### 2. Create and activate the conda environment
+2. **Create and activate the conda environment**
 ```bash
 conda create -n deepnanohic python=3.9
 conda activate deepnanohic
 ```
 
-### 3. Install Dependencies
-#### (1) Install PyTorch
-Install PyTorch (>= 1.9.0) following the official instructions ([https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/)). We recommend using PyTorch 1.12.1.
-#### (2) Install Required Packages
-```bash
-pip install -r requirements.txt
-```
-Or install them individually:
-```bash
-pip install cooler h5py numpy pandas pytorch_tabnet scikit-learn scipy
-```
+3. **Install Dependencies**
+
+   a. Install PyTorch  
+   Install PyTorch (>= 1.9.0) following the official instructions:[https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/) We recommend using PyTorch 1.12.1.
+
+   b. Install Required Packages
+   You can install all required packages using:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ##  Data Preparation
 
 To run DeepNanoHi-C, please prepare the following input files:
 
-#### 1. `data.txt`
+1. **`data.txt`**
 
 A tab-separated file containing raw interaction records. Each row represents an interaction between two genomic bins in a single cell. The required columns are:
 
@@ -56,7 +55,7 @@ A tab-separated file containing raw interaction records. Each row represents an 
 | `count`     | Contact count |
 
 
-#### 2. `label_info.pickle`
+2. **`label_info.pickle`**
 
 A Python pickle file (`.pickle`) that stores cell metadata, including cell type labels. It should be a dictionary with cell IDs as keys and their corresponding cell types as values.
 
@@ -68,7 +67,7 @@ A Python pickle file (`.pickle`) that stores cell metadata, including cell type 
 ```
 
 
-#### 3. `config.json`
+3. **`config.json`**
 
 A JSON configuration file specifying dataset-related parameters. Some of the required keys include:
 
