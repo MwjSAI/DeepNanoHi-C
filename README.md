@@ -74,7 +74,6 @@ A JSON configuration file specifying dataset-related parameters. Some of the req
 
 ```json
 {
-  "config_name": "Tang et. al",
   "data_dir": "./",
   "temp_dir": "./Temp",
   "genome_reference_path": "./hg38.chrom.sizes",
