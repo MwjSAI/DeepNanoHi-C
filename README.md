@@ -42,7 +42,7 @@ pip install cooler h5py numpy pandas pytorch_tabnet scikit-learn scipy
 
 To run DeepNanoHi-C, please prepare the following input files:
 
-### 1. `data.txt`
+#### 1. `data.txt`
 
 A tab-separated file containing raw interaction records. Each row represents an interaction between two genomic bins in a single cell. The required columns are:
 
@@ -56,7 +56,7 @@ A tab-separated file containing raw interaction records. Each row represents an 
 | `count`     | Contact count |
 
 
-### 2. `label_info.pickle`
+#### 2. `label_info.pickle`
 
 A Python pickle file (`.pickle`) that stores cell metadata, including cell type labels. It should be a dictionary with cell IDs as keys and their corresponding cell types as values.
 
@@ -68,7 +68,7 @@ A Python pickle file (`.pickle`) that stores cell metadata, including cell type 
 ```
 
 
-### 3. `config.json`
+#### 3. `config.json`
 
 A JSON configuration file specifying dataset-related parameters. Some of the required keys include:
 
@@ -83,8 +83,7 @@ A JSON configuration file specifying dataset-related parameters. Some of the req
 			  "chr11","chr12","chr13","chr14","chr15",
 			  "chr16","chr17","chr18","chr19","chr20",
 			  "chr21","chr22","chrX"],
-  "resolution": 10000,
-   ...
+  "resolution": 10000
 }
 ```
 
@@ -96,7 +95,7 @@ We provide users with comprehensive usage instructions in the [`data/`](./data) 
 - Step-by-step data preprocessing examples  
 - Configuration file templates (`config.json`)  
 - Instructions for feature extraction and model training  
-- Scripts for clustering evaluation and downstream analysis
+- Clustering evaluation and downstream analysis
 
 To help users get started quickly, we also provide demo data and example results.
 
