@@ -84,16 +84,6 @@ import numpy as np
 
 class MoE(nn.Module):
 
-    """Call a Sparsely gated mixture of experts layer with 1-layer Feed-Forward networks as experts.
-    Args:
-    input_size: integer - size of the input
-    output_size: integer - size of the input
-    num_experts: an integer - number of experts
-    hidden_size: an integer - hidden size of the experts
-    noisy_gating: a boolean
-    k: an integer - how many experts to use for each batch element
-    """
-
     def __init__(self, input_size, output_size, num_experts, experts_linear, experts_bn= None, noisy_gating=True, k=4, coef=1e-2):
         super(MoE, self).__init__()
         self.noisy_gating = noisy_gating
@@ -116,15 +106,6 @@ class MoE(nn.Module):
 
     def cv_squared(self, x):
 
-        """The squared coefficient of variation of a sample.
-        Useful as a loss to encourage a positive distribution to be more uniform.
-        Epsilons added for numerical stability.
-        Returns 0 for an empty Tensor.
-        Args:
-        x: a `Tensor`.
-        Returns:
-        a `Scalar`.
-        """
         eps = 1e-10
 
 
@@ -134,32 +115,9 @@ class MoE(nn.Module):
 
     def _gates_to_load(self, gates):
 
-        """Compute the true load per expert, given the gates.
-        The load is the number of examples for which the corresponding gate is >0.
-        Args:
-        gates: a `Tensor` of shape [batch_size, n]
-        Returns:
-        a float32 `Tensor` of shape [n]
-        """
         return (gates > 0).sum(0)
 
     def _prob_in_top_k(self, clean_values, noisy_values, noise_stddev, noisy_top_values):
-        """Helper function to NoisyTopKGating.
-        Computes the probability that value is in top k, given different random noise.
-        This gives us a way of backpropagating from a loss that balances the number
-        of times each expert is in the top k experts per example.
-        In the case of no noise, pass in None for noise_stddev, and the result will
-        not be differentiable.
-        Args:
-        clean_values: a `Tensor` of shape [batch, n].
-        noisy_values: a `Tensor` of shape [batch, n].  Equal to clean values plus
-          normally distributed noise with standard deviation noise_stddev.
-        noise_stddev: a `Tensor` of shape [batch, n], or None
-        noisy_top_values: a `Tensor` of shape [batch, m].
-           "values" Output of tf.top_k(noisy_top_values, m).  m >= k+1
-        Returns:
-        a `Tensor` of shape [batch, n].
-        """
         batch = clean_values.size(0)
         m = noisy_top_values.size(1)
         top_values_flat = noisy_top_values.flatten()
@@ -176,16 +134,6 @@ class MoE(nn.Module):
         return prob
 
     def noisy_top_k_gating(self, x, train, noise_epsilon=1e-2):
-        """Noisy top-k gating.
-          See paper: https://arxiv.org/abs/1701.06538.
-          Args:
-            x: input Tensor with shape [batch_size, input_size]
-            train: a boolean - we only add noise at training time.
-            noise_epsilon: a float
-          Returns:
-            gates: a Tensor with shape [batch_size, num_experts]
-            load: a Tensor with shape [num_experts]
-        """
         clean_logits = x @ self.w_gate
         if self.noisy_gating and train:
             raw_noise_stddev = x @ self.w_noise
@@ -210,17 +158,6 @@ class MoE(nn.Module):
         return gates, load
 
     def forward(self, x):
-        """Args:
-        x: tensor shape [batch_size, input_size]
-        train: a boolean scalar.
-        loss_coef: a scalar - multiplier on load-balancing losses
-
-        Returns:
-        y: a tensor with shape [batch_size, output_size].
-        extra_training_loss: a scalar.  This should be added into the overall
-        training loss of the model.  The backpropagation of this loss
-        encourages all experts to be approximately equally used across a batch.
-        """
         gates, load = self.noisy_top_k_gating(x, self.training)
 
         importance = gates.sum(0)
@@ -477,9 +414,16 @@ class TiedAutoEncoder(nn.Module):
 			epochs=10, sparse=True, sparse_rate=None, classifier=False, early_stop=True, batch_size=-1, targets=None):
 		
 		if self.shape_list[1] < data.shape[1]:
-			pca = PCA(n_components=self.shape_list[1]).fit(data)
-			self.weight_list[0].data = torch.from_numpy(pca.components_).float().to(device, non_blocking=True)
-			self.reverse_weight_list[-1].data = torch.from_numpy(pca.components_).float().to(device, non_blocking=True)
+			target_dim = self.shape_list[1]
+			max_pca_dim = min(data.shape[0], data.shape[1], target_dim)
+			pca = PCA(n_components=max_pca_dim).fit(data)
+			components = pca.components_  # shape: (max_pca_dim, feature_dim)
+			if max_pca_dim < target_dim:
+				padding = np.zeros((target_dim - max_pca_dim, components.shape[1]))
+				components = np.vstack([components, padding]) 
+			self.weight_list[0].data = torch.from_numpy(components).float().to(device, non_blocking=True)
+			self.reverse_weight_list[-1].data = torch.from_numpy(components).float().to(device, non_blocking=True)
+
 			
 		optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
 		data = torch.from_numpy(data).to(device, non_blocking=True)
