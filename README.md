@@ -29,7 +29,8 @@ conda activate deepnanohic
 3. **Install Dependencies**
 
    a. Install PyTorch  
-   Install PyTorch (>= 1.9.0) following the official instructions:[https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/) We recommend using PyTorch 1.12.1.
+   Install PyTorch (>= 1.9.0) following the official instructions:[https://pytorch.org/get-started/locally/](https://pytorch.org/get-started/locally/).  
+   We recommend using PyTorch 1.12.1.
 
    b. Install Required Packages
    You can install all required packages using:
