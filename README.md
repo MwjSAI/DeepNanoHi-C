@@ -8,7 +8,7 @@ DeepNanoHi-C tackles these challenges through a **multi-step autoencoder archite
 
 This tool enables comprehensive and scalable analysis of single-cell chromatin conformation, providing new avenues for understanding genome organization at the single-cell level and across species.
 
-![Model Overview](overview.jpg)
+![Model Overview](overview.pdf)
 ##  Installation
 
 To install and set up **DeepNanoHi-C**, please follow the steps below:
